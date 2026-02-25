@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "google/gemini-2.0-flash",
+  "mcp": {
+    "sysbio-sandbox": {
+      "type": "remote",
+      "url": "http://sandbox:8080/mcp",
+      "timeout": 1500000
+    }
+  },
+  "instructions": [
+    "/workspace/SKILLS.md"
+  ]
+}

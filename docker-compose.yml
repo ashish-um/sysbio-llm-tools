@@ -1,0 +1,65 @@
+services:
+
+  # ── Bioinformatics sandbox + MCP server ──────────────────────────────────────
+  sandbox:
+    build: ./sandbox
+    container_name: sysbio_sandbox
+    volumes:
+      - ./workspace:/workspace
+    environment:
+      - WORKSPACE_PATH=/workspace
+    ports:
+      - "8080:8080"
+    networks:
+      - sysbio_net
+    healthcheck:
+      test: [ "CMD", "python3", "-c", "import socket; s=socket.socket(); s.settimeout(2); s.connect(('localhost',8080)); s.close()" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── OpenCode LLM agent (TUI) ────────────────────────────────────────────────
+  opencode:
+    image: ghcr.io/anomalyco/opencode:latest
+    container_name: sysbio_opencode
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+    environment:
+      - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
+      - TERM=xterm-256color
+    volumes:
+      - ./opencode.json:/root/.config/opencode/config.json
+      - ./sandbox/SKILLS.md:/workspace/SKILLS.md
+    depends_on:
+      sandbox:
+        condition: service_healthy
+    networks:
+      - sysbio_net
+
+  # ── OpenCode LLM agent (Web UI) ─────────────────────────────────────────────
+  opencode-web:
+    image: ghcr.io/anomalyco/opencode:latest
+    container_name: sysbio_opencode_web
+    entrypoint: []
+    command: [ "opencode", "web", "--hostname", "0.0.0.0", "--port", "3000" ]
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    environment:
+      - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
+    volumes:
+      - ./opencode.json:/root/.config/opencode/config.json
+      - ./sandbox/SKILLS.md:/workspace/SKILLS.md
+    depends_on:
+      sandbox:
+        condition: service_healthy
+    networks:
+      - sysbio_net
+
+networks:
+  sysbio_net:
+    driver: bridge

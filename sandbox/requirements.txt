@@ -1,0 +1,14 @@
+# MCP framework — Anthropic's official Python SDK
+mcp>=1.0.0
+
+# HTTP server for SSE transport
+starlette>=0.37.0
+uvicorn>=0.29.0
+
+# Bioinformatics tools
+carveme>=1.6.2
+cobra>=0.29.0      # COBRApy
+memote>=0.16.0
+
+# Utilities
+pydantic>=2.0.0
