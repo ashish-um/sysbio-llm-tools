@@ -8,6 +8,14 @@
       "timeout": 1500000
     }
   },
+  "tools": {
+    "bash": false,
+    "read": false,
+    "write": false,
+    "edit": false,
+    "glob": false,
+    "grep": false
+  },
   "instructions": [
     "/workspace/SKILLS.md"
   ]

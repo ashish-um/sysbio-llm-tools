@@ -7,11 +7,11 @@ Use the sandbox tool to run bioinformatics commands and Python scripts.
 
 ## Hard Rules — never break these
 1. ALL file paths must be absolute, starting with `/workspace/`.
-2. Never `cat` an entire SBML/XML file — use `head -n 100` or `grep` to inspect.
-3. After every completed task: list every file written and confirm `reproducible_workflow.sh` was updated.
-4. On any non-zero exit code: read STDERR fully, state your diagnosis, fix it, then retry once. If it fails again, simplify the command.
-5. For CarveMe jobs, always set `timeout_seconds` to `1200` (20 min).
-6. Keep commands simple. Do NOT add optional flags unless troubleshooting a failure.
+2. **NEVER use your default built-in tools (`read`, `bash`, `glob`, `grep`, `edit`) to interact with the `/workspace` directory.** You MUST ALWAYS use the `sysbio-sandbox_execute_sandbox_command` MCP tool to interact with files or run commands in the sandbox workspace.
+3. Never `cat` an entire SBML/XML file — use `head -n 100` or `grep` inside `sysbio-sandbox_execute_sandbox_command` to inspect.
+4. After every completed task: list every file written and confirm `reproducible_workflow.sh` was updated.
+5. On any non-zero exit code: read STDERR fully, state your diagnosis, fix it, then retry once. If it fails again, simplify the command.
+6. For CarveMe jobs, always set `timeout_seconds` to `1200` (20 min).
 
 ## Tool: CarveMe — draft model reconstruction
 
